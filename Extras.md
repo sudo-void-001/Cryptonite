@@ -1,4 +1,4 @@
-# Extras
+# Extras!          
 The Stubs (core/crypto.py etc.)
 
 Every module starts as a stub — function signatures, type hints, docstrings, but no implementation. This stops the AI from going off-spec on the interface design.
