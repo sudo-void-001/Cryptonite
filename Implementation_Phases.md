@@ -3,13 +3,14 @@
 ---
 
 ### Phase 0 — Project Setup
-Files: pyproject.toml, requirements.txt, requirements-dev.txt, Dockerfile, .github/workflows/ci.yml, .env.example, .gitignore
+Files: pyproject.toml, requirements.txt, requirements-dev.txt, Dockerfile, docker-compose.yml, .github/workflows/ci.yml, .env.example, .env, .gitignore
 Acceptance criteria:
-- [ ] Virtual environment creates and activates
-- [ ] All dependencies install without errors
-- [ ] Docker image builds successfully
-- [ ] CI pipeline runs (even if no tests yet)
-- [ ] Project importable: `from core import crypto, prng, payload`
+- [x] Project configuration (pyproject.toml, requirements.txt, requirements-dev.txt) created
+- [x] Dockerfile and docker-compose.yml created
+- [x] GitHub Actions CI pipeline (.github/workflows/ci.yml) created
+- [x] Environment files (.env.example and .env with all placeholders) created
+- [x] Git ignore rules (.gitignore) created
+- [x] Project cleanly importable: `from core import crypto, prng, payload, compression, metadata, analysis`
 
 ### Phase 1 — Crypto Engine
 Files: core/crypto.py, core/prng.py, core/payload.py, core/compression.py

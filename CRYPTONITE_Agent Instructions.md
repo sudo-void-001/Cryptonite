@@ -51,10 +51,10 @@ ui/components.py       ← reusable UI components
 ```
 
 ## Current phase
-Phase 0: Project setup. Documentation complete. No code implemented yet.
+Phase 1: Crypto Engine — Implement `core/crypto.py`, `core/prng.py`, `core/payload.py`, `core/compression.py` and comprehensive test suites.
 
 ## What's done
-- All documentation written and reviewed:
+- All documentation reviewed and reconciled:
   - Product_Requirements.md
   - Architecture.md
   - Algorithm_Specifications.md
@@ -63,7 +63,14 @@ Phase 0: Project setup. Documentation complete. No code implemented yet.
   - Design_Reference.md
   - Competitive_Research.md (14 tools analyzed)
   - Extras.md (all module stubs)
+- **Phase 0 completed**:
+  - `pyproject.toml`, `requirements.txt`, `requirements-dev.txt` created
+  - `Dockerfile` & `docker-compose.yml` created
+  - `.github/workflows/ci.yml` CI pipeline created
+  - `.env` and `.env.example` created with all integration placeholders
+  - `.gitignore` created
+  - Complete project module tree and stubs created (`core/`, `cli/`, `api/`, `ui/`, `tests/`, `benchmarks/`, `samples/`)
+  - Full module importability verified
 
 ## What's next
-- Phase 0: Create pyproject.toml, requirements.txt, Dockerfile, CI pipeline, .gitignore
-- Then Phase 1: Implement crypto.py, prng.py, payload.py, compression.py + tests
+- Phase 1: Implement PBKDF2-HMAC-SHA256, AES-256-CBC Encrypt-then-MAC (`crypto.py`), ChaCha20 CSPRNG permutation (`prng.py`), binary framing & version bit 7 (`payload.py`), zlib compression (`compression.py`), and test suites.

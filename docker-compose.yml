@@ -1,0 +1,32 @@
+﻿version: "3.8"
+
+services:
+  api:
+    build: .
+    container_name: cryptonite_api
+    restart: unless-stopped
+    command: uvicorn api.routes:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    environment:
+      - CRYPTONITE_ENV=development
+
+  ui:
+    build: .
+    container_name: cryptonite_ui
+    restart: unless-stopped
+    command: streamlit run ui/app.py --server.port 8501 --server.address 0.0.0.0
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - api
+    environment:
+      - CRYPTONITE_ENV=development
