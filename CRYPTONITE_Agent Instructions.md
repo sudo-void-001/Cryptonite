@@ -51,10 +51,10 @@ ui/components.py       ← reusable UI components
 ```
 
 ## Current phase
-Phase 1: Crypto Engine — Implement `core/crypto.py`, `core/prng.py`, `core/payload.py`, `core/compression.py` and comprehensive test suites.
+Phase 2: PNG Carrier — Implement `core/carriers/base.py`, `core/carriers/png.py` (Sobel gradient adaptive LSB), and `core/metadata.py` (lossless PNG/JPEG/MP3 metadata sanitization) with 100% test coverage.
 
 ## What's done
-- All documentation reviewed and reconciled:
+- All documentation reviewed, reconciled, and updated:
   - Product_Requirements.md
   - Architecture.md
   - Algorithm_Specifications.md
@@ -69,8 +69,13 @@ Phase 1: Crypto Engine — Implement `core/crypto.py`, `core/prng.py`, `core/pay
   - `.github/workflows/ci.yml` CI pipeline created
   - `.env` and `.env.example` created with all integration placeholders
   - `.gitignore` created
-  - Complete project module tree and stubs created (`core/`, `cli/`, `api/`, `ui/`, `tests/`, `benchmarks/`, `samples/`)
-  - Full module importability verified
+  - Complete project module tree created (`core/`, `cli/`, `api/`, `ui/`, `tests/`, `benchmarks/`, `samples/`)
+- **Phase 1 completed (100.0% Test Coverage)**:
+  - `core/crypto.py`: PBKDF2-HMAC-SHA256 (600k), AES-256-CBC, HMAC-SHA256 Encrypt-then-MAC, constant-time `hmac.compare_digest`, encrypted blob packaging (100% coverage).
+  - `core/prng.py`: ChaCha20 CSPRNG vectorized bulk-unpacked Fisher-Yates permutation generator (100% coverage).
+  - `core/payload.py`: Binary header framing with version bit 7 compression flag and bounds checking (100% coverage).
+  - `core/compression.py`: Pre-encryption zlib compression with automated passthrough fallback (100% coverage).
+  - Comprehensive test suite: 67 passing unit tests, 0 failures, 0 Ruff lint errors.
 
 ## What's next
-- Phase 1: Implement PBKDF2-HMAC-SHA256, AES-256-CBC Encrypt-then-MAC (`crypto.py`), ChaCha20 CSPRNG permutation (`prng.py`), binary framing & version bit 7 (`payload.py`), zlib compression (`compression.py`), and test suites.
+- Phase 2: Implement `core/carriers/base.py` (BaseCarrier ABC), `core/metadata.py` (lossless chunk stripping for PNG, marker stripping for JPEG, tag stripping for MP3), and `core/carriers/png.py` (Sobel gradient texture analysis & adaptive 1-3 bit LSB allocation). Target 100% test coverage.

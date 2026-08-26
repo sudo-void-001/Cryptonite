@@ -1,4 +1,4 @@
-﻿# Cryptonite Production Dependencies
+# Cryptonite Production Dependencies
 # Core Cryptography & Data Processing
 cryptography>=43.0.0
 numpy>=1.26.0

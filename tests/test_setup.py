@@ -3,11 +3,11 @@ Phase 0 Smoke Test: Project imports and structure verification.
 """
 
 def test_imports():
-    from core import crypto, prng, payload, compression, metadata, analysis
-    from core.carriers import PngCarrier, JpegCarrier, Mp3Carrier
     from api.routes import app as fastapi_app
     from cli.main import app as typer_app
-    
+    from core import analysis, compression, crypto, metadata, payload, prng
+    from core.carriers import JpegCarrier, Mp3Carrier, PngCarrier
+
     assert crypto is not None
     assert prng is not None
     assert payload is not None

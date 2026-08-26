@@ -1,4 +1,4 @@
-﻿# Cryptonite Development & Testing Dependencies
+# Cryptonite Development & Testing Dependencies
 -r requirements.txt
 
 # Testing & Coverage

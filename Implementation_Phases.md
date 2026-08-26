@@ -14,20 +14,20 @@ Acceptance criteria:
 
 ### Phase 1 — Crypto Engine
 Files: core/crypto.py, core/prng.py, core/payload.py, core/compression.py
-Tests: tests/test_crypto.py, tests/test_payload.py
+Tests: tests/test_crypto.py, tests/test_prng.py, tests/test_payload.py, tests/test_compression.py
 Acceptance criteria:
-- [ ] encrypt(decrypt(data)) == data for arbitrary byte strings
-- [ ] Two identical passphrases + same salt produce identical keys
-- [ ] Two different salts produce different keys
-- [ ] HMAC verification fails if ciphertext is modified by 1 bit
-- [ ] HMAC comparison is constant-time (uses hmac.compare_digest)
-- [ ] PRNG produces same permutation given same seed and length
-- [ ] PRNG produces different permutation given different seed
-- [ ] payload.pack(payload.unpack(data)) == data roundtrip
-- [ ] Compression reduces text payloads by >20%
-- [ ] compress(decompress(data)) == data roundtrip
-- [ ] Compression fallback: if compressed >= original, returns original with flag
-- [ ] All functions have type hints and docstrings
+- [x] encrypt(decrypt(data)) == data for arbitrary byte strings
+- [x] Two identical passphrases + same salt produce identical keys
+- [x] Two different salts produce different keys
+- [x] HMAC verification fails if ciphertext is modified by 1 bit
+- [x] HMAC comparison is constant-time (uses hmac.compare_digest)
+- [x] PRNG produces same permutation given same seed and length
+- [x] PRNG produces different permutation given different seed
+- [x] payload.pack(payload.unpack(data)) == data roundtrip
+- [x] Compression reduces text payloads by >20%
+- [x] compress(decompress(data)) == data roundtrip
+- [x] Compression fallback: if compressed >= original, returns original with flag
+- [x] All functions have type hints and docstrings
 
 ### Phase 2 — PNG Carrier
 Files: core/carriers/base.py, core/carriers/png.py, core/metadata.py

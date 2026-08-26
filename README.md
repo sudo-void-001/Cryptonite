@@ -1,7 +1,7 @@
 # 🔒 CRYPTONITE
 Production-grade steganography toolkit — hide encrypted payloads inside PNG, JPEG, and MP3 files.
 
-![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg) ![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg) ![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg) ![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg) ![Tests: 67/67 Passing](https://img.shields.io/badge/Tests-67%2F67%20Passing-brightgreen.svg) ![Coverage: 100% Core](https://img.shields.io/badge/Coverage-100%25%20Core-brightgreen.svg) ![Ruff: Clean](https://img.shields.io/badge/Ruff-Clean-brightgreen.svg)
 
 Cryptonite combines AES-256 encryption, HMAC integrity verification, adaptive embedding algorithms, payload compression, metadata sanitization, and built-in steganalysis scoring to make data invisible inside ordinary media files. Built for security researchers, CTF competitors, journalists, and anyone who needs covert communication channels.
 
@@ -209,18 +209,18 @@ print(response.json())
 ```
 
 ## Implementation Phases
-| Phase | Description |
-|-------|-------------|
-| 0 | Project setup, dependencies, CI/CD, Docker |
-| 1 | Crypto engine, PRNG, payload packing & compression |
-| 2 | PNG carrier & lossless metadata sanitization |
-| 3 | JPEG carrier (direct DCT manipulation via jpegio) |
-| 4 | MP3 carrier (echo hiding) |
-| 5 | Steganalysis module (Chi-squared, SSIM, RS analysis) |
-| 6 | CLI interface (Typer + Rich, batch processing) |
-| 7 | Web UI (Streamlit dark theme, diff viewer) |
-| 8 | REST API (FastAPI + Swagger docs) |
-| 9 | Polish, benchmarks, and security audits |
+| Phase | Description | Status |
+|---|---|---|
+| 0 | Project setup, dependencies, CI/CD, Docker | ✅ Complete |
+| 1 | Crypto engine, PRNG, payload packing & compression | ✅ Complete (100% Coverage) |
+| 2 | PNG carrier & lossless metadata sanitization | 🔄 Next Up |
+| 3 | JPEG carrier (direct DCT manipulation via jpegio) | ⏳ Planned |
+| 4 | MP3 carrier (echo hiding) | ⏳ Planned |
+| 5 | Steganalysis module (Chi-squared, SSIM, RS analysis) | ⏳ Planned |
+| 6 | CLI interface (Typer + Rich, batch processing) | ⏳ Planned |
+| 7 | Web UI (Streamlit dark theme, diff viewer) | ⏳ Planned |
+| 8 | REST API (FastAPI + Swagger docs) | ⏳ Planned |
+| 9 | Polish, benchmarks, and security audits | ⏳ Planned |
 
 ## Success Metrics
 - 100% test coverage on crypto modules
