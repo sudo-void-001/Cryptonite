@@ -1,10 +1,9 @@
-﻿"""
+"""
 Cryptonite FastAPI REST Endpoints.
 """
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.schemas import CapacityResponse, SteganalysisResponse
 
 app = FastAPI(
     title="Cryptonite REST API",
@@ -22,5 +21,5 @@ app.add_middleware(
 
 
 @app.get("/health")
-def health_check() -> dict:
+def health_check() -> dict[str, str]:
     return {"status": "ok", "service": "cryptonite"}

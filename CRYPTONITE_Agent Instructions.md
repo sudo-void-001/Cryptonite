@@ -77,5 +77,21 @@ Phase 2: PNG Carrier — Implement `core/carriers/base.py`, `core/carriers/png.p
   - `core/compression.py`: Pre-encryption zlib compression with automated passthrough fallback (100% coverage).
   - Comprehensive test suite: 67 passing unit tests, 0 failures, 0 Ruff lint errors.
 
-## What's next
-- Phase 2: Implement `core/carriers/base.py` (BaseCarrier ABC), `core/metadata.py` (lossless chunk stripping for PNG, marker stripping for JPEG, tag stripping for MP3), and `core/carriers/png.py` (Sobel gradient texture analysis & adaptive 1-3 bit LSB allocation). Target 100% test coverage.
+## Current Status: Phase 2 Ready
+
+The user has explicitly mandated the **"Ponytail philosophy"** (zero bloat, rock-solid robustness, fail-safe defaults, high speed, 100% test coverage, strict typing, defensive validation). 
+
+**What is completed:**
+1. **Phase 1 (Crypto Engine)** is 100% complete and compliant (100% coverage, vectorized PRNG, strict boundary checks).
+2. **Phase 0 & Infrastructure** is 100% complete and compliant (`pyproject.toml`, Docker, CI, requirements, `.env`).
+3. **Global Codebase Audit**: ALL interface stubs (`metadata.py`, `analysis.py`, `carriers/*.py`, `cli/main.py`, `api/*.py`) have been strictly typed, defensively validated, and cleanly separated. The entire repo has 0 Ruff lint errors and 100% core test coverage.
+
+## Next Steps for the Next Agent
+
+Your immediate task is to begin implementing **Phase 2 (PNG Carrier & Lossless Metadata Sanitization)**.
+Read `Algorithm_Specifications.md` and `Implementation_Phases.md` for specific Phase 2 requirements (adaptive LSB, Sobel gradient, preservation of critical PNG chunks).
+
+**Guidelines for Phase 2:**
+1. Maintain the Ponytail philosophy: use strict typing, defensively validate all inputs (raise `TypeError` / `ValueError`), and avoid unnecessary bloat.
+2. Achieve 100% test coverage for the new modules (`core/carriers/png.py` and `core/metadata.py` - png strip function).
+3. Do not modify the Phase 1 crypto modules (`core/crypto.py`, `core/prng.py`, `core/payload.py`, `core/compression.py`) — they are finished.
