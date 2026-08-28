@@ -33,16 +33,16 @@ Acceptance criteria:
 Files: core/carriers/base.py, core/carriers/png.py, core/metadata.py
 Tests: tests/test_png.py, tests/test_metadata.py
 Acceptance criteria:
-- [ ] embed(extract(cover, payload)) == payload roundtrip
-- [ ] Output PSNR > 40 dB vs cover
-- [ ] Output SSIM > 0.99 vs cover
-- [ ] Chi-squared detection score < 0.05 on output
-- [ ] capacity() returns correct byte count
-- [ ] Raises clear error if payload exceeds capacity
-- [ ] Adaptive bit depth: verifies 1-bit in flat regions, 3-bit in textured
-- [ ] PRNG scatter: bit-plane of stego looks like noise (no visible pattern)
-- [ ] Metadata stripped: no EXIF data in output PNG
-- [ ] base.py abstract class enforced (TypeError if embed/extract/capacity not implemented)
+- [x] embed(extract(cover, payload)) == payload roundtrip
+- [x] Output PSNR > 40 dB vs cover
+- [x] Output SSIM > 0.99 vs cover
+- [x] Chi-squared detection score < 0.05 on output
+- [x] capacity() returns correct byte count
+- [x] Raises clear error if payload exceeds capacity
+- [x] Adaptive bit depth: verifies 1-bit in flat regions, 3-bit in textured
+- [x] PRNG scatter: bit-plane of stego looks like noise (no visible pattern)
+- [x] Metadata stripped: no EXIF data in output PNG
+- [x] base.py abstract class enforced (TypeError if embed/extract/capacity not implemented)
 
 ### Phase 3 — JPEG Carrier
 Files: core/carriers/jpeg.py

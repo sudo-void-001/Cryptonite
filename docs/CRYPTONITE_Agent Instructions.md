@@ -77,21 +77,25 @@ Phase 2: PNG Carrier — Implement `core/carriers/base.py`, `core/carriers/png.p
   - `core/compression.py`: Pre-encryption zlib compression with automated passthrough fallback (100% coverage).
   - Comprehensive test suite: 67 passing unit tests, 0 failures, 0 Ruff lint errors.
 
-## Current Status: Phase 2 Ready
+## Current Status: Phase 3 Ready
 
 The user has explicitly mandated the **"Ponytail philosophy"** (zero bloat, rock-solid robustness, fail-safe defaults, high speed, 100% test coverage, strict typing, defensive validation). 
 
 **What is completed:**
-1. **Phase 1 (Crypto Engine)** is 100% complete and compliant (100% coverage, vectorized PRNG, strict boundary checks).
-2. **Phase 0 & Infrastructure** is 100% complete and compliant (`pyproject.toml`, Docker, CI, requirements, `.env`).
-3. **Global Codebase Audit**: ALL interface stubs (`metadata.py`, `analysis.py`, `carriers/*.py`, `cli/main.py`, `api/*.py`) have been strictly typed, defensively validated, and cleanly separated. The entire repo has 0 Ruff lint errors and 100% core test coverage.
+1. **Phase 0 & Infrastructure**: 100% complete (`pyproject.toml`, Docker, CI, requirements, `.env`, `docs/` organized).
+2. **Phase 1 (Crypto Engine)**: 100% complete and compliant (`crypto.py`, `prng.py`, `payload.py`, `compression.py` with 100% coverage).
+3. **Phase 2 (PNG Carrier & Lossless Metadata Sanitization)**: 100% complete and compliant:
+   - `core/metadata.py`: Lossless binary-level PNG chunk sanitizer stripping all ancillary chunks while strictly preserving `IHDR`, `PLTE`, `IDAT`, `IEND`, and `tRNS` with CRC32 verification (100% coverage).
+   - `core/carriers/base.py`: Robust abstract base class `BaseCarrier`.
+   - `core/carriers/png.py`: Adaptive LSB PNG carrier using MSB-invariant Sobel edge gradient analysis and ChaCha20 scattering (100% coverage, PSNR > 40 dB, SSIM > 0.99, RGBA alpha preservation).
+   - Complete test suite: **101 passing unit and end-to-end integration tests**, 0 failures, 0 Ruff lint errors.
 
 ## Next Steps for the Next Agent
 
-Your immediate task is to begin implementing **Phase 2 (PNG Carrier & Lossless Metadata Sanitization)**.
-Read `Algorithm_Specifications.md` and `Implementation_Phases.md` for specific Phase 2 requirements (adaptive LSB, Sobel gradient, preservation of critical PNG chunks).
+Your immediate task is to begin implementing **Phase 3 (JPEG Carrier - Direct DCT Coefficient Embedding)**.
+Read `docs/Algorithm_Specifications.md` and `docs/Implementation_Phases.md` for Phase 3 requirements (`jpegio` raw DCT manipulation without re-encoding, sign-preserving AC coefficient LSB modification, DC/abs<=1 skipping).
 
-**Guidelines for Phase 2:**
-1. Maintain the Ponytail philosophy: use strict typing, defensively validate all inputs (raise `TypeError` / `ValueError`), and avoid unnecessary bloat.
-2. Achieve 100% test coverage for the new modules (`core/carriers/png.py` and `core/metadata.py` - png strip function).
-3. Do not modify the Phase 1 crypto modules (`core/crypto.py`, `core/prng.py`, `core/payload.py`, `core/compression.py`) — they are finished.
+**Guidelines for Phase 3:**
+1. Maintain the Ponytail philosophy: strict typing, defensive validation, 100% test coverage.
+2. Note that on Windows, `jpegio` may require C++ build tools or fallback mock/conditional handling in CI.
+3. Do not modify Phase 1 or Phase 2 modules (`core/crypto.py`, `core/prng.py`, `core/payload.py`, `core/compression.py`, `core/metadata.py`, `core/carriers/png.py`) — they are completed and fully tested.
