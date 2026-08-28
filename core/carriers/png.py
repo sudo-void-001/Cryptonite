@@ -37,17 +37,17 @@ def _compute_msb_gradient(img_arr: np.ndarray, embed_channels: int) -> np.ndarra
     100% invariant between cover and stego images, guaranteeing deterministic
     extraction without transmitting side-channel allocation maps.
     """
-    msb_arr = (img_arr & 0xF8).astype(np.float32)
+    msb_arr = img_arr & 0xF8
 
     if embed_channels >= 3:
-        # Luminance Y = 0.299*R + 0.587*G + 0.114*B
+        # Luminance Y = 0.299*R + 0.587*G + 0.114*B computed in float32 directly
         gray = (
-            0.299 * msb_arr[..., 0]
-            + 0.587 * msb_arr[..., 1]
-            + 0.114 * msb_arr[..., 2]
+            0.299 * msb_arr[..., 0].astype(np.float32)
+            + 0.587 * msb_arr[..., 1].astype(np.float32)
+            + 0.114 * msb_arr[..., 2].astype(np.float32)
         )
     else:
-        gray = msb_arr[..., 0]
+        gray = msb_arr[..., 0].astype(np.float32)
 
     gx = convolve2d(gray, SOBEL_X, mode="same", boundary="symm")
     gy = convolve2d(gray, SOBEL_Y, mode="same", boundary="symm")
@@ -183,7 +183,14 @@ class PngCarrier(BaseCarrier):
 
         _, arr, embed_channels = _load_image_array(carrier_path)
         grad = _compute_msb_gradient(arr, embed_channels)
-        _, _, total_bits = _build_embedding_slots(arr.shape, embed_channels, grad)
+
+        # O(1) memory vectorized bit count directly from depth classification
+        h, w = arr.shape[:2]
+        depth_map = np.ones((h, w), dtype=np.uint8)
+        depth_map[grad >= TEXTURE_T1] = 2
+        depth_map[grad >= TEXTURE_T2] = 3
+
+        total_bits = int(np.sum(depth_map)) * embed_channels
 
         # 4 bytes (32 bits) reserved for framed payload length header
         max_bytes = (total_bits // 8) - 4

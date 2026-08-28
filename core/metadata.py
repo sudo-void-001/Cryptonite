@@ -49,32 +49,33 @@ def strip_png_metadata(image_input: str | Path | bytes | bytearray) -> bytes:
     output = bytearray(PNG_SIGNATURE)
     offset = 8
     raw_len = len(raw)
+    raw_view = memoryview(raw)
     iend_found = False
 
     while offset < raw_len:
         if raw_len - offset < 12:
             raise ValueError("Truncated PNG chunk header")
 
-        length = struct.unpack(">I", raw[offset : offset + 4])[0]
-        chunk_type = raw[offset + 4 : offset + 8]
+        length = struct.unpack(">I", raw_view[offset : offset + 4])[0]
+        chunk_type = bytes(raw_view[offset + 4 : offset + 8])
         chunk_total_len = 12 + length
 
         if offset + chunk_total_len > raw_len:
             type_str = chunk_type.decode("latin1", errors="replace")
             raise ValueError(f"Truncated PNG chunk data for {type_str}")
 
-        chunk_data = raw[offset + 8 : offset + 8 + length]
+        chunk_data = raw_view[offset + 8 : offset + 8 + length]
         stored_crc = struct.unpack(
-            ">I", raw[offset + 8 + length : offset + chunk_total_len]
+            ">I", raw_view[offset + 8 + length : offset + chunk_total_len]
         )[0]
-        computed_crc = zlib.crc32(chunk_type + chunk_data) & 0xFFFFFFFF
+        computed_crc = zlib.crc32(chunk_data, zlib.crc32(chunk_type)) & 0xFFFFFFFF
 
         if stored_crc != computed_crc:
             type_str = chunk_type.decode("latin1", errors="replace")
             raise ValueError(f"CRC mismatch in PNG chunk {type_str}")
 
         if chunk_type in CRITICAL_PNG_CHUNKS:
-            output.extend(raw[offset : offset + chunk_total_len])
+            output.extend(raw_view[offset : offset + chunk_total_len])
 
         if chunk_type == b"IEND":
             iend_found = True
