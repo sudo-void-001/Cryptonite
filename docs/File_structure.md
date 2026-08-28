@@ -1,12 +1,15 @@
 ```text
 Cryptonite/
 ├── docs/
-│   ├── PRD.md
-│   ├── ARCHITECTURE.md
-│   ├── PHASES.md
-│   ├── DESIGN.md
-│   ├── ALGORITHMS.md
-│   └── COMPETITIVE_RESEARCH.md
+│   ├── Algorithm_Specifications.md
+│   ├── Architecture.md
+│   ├── Competitive_Research.md
+│   ├── CRYPTONITE_Agent Instructions.md
+│   ├── Design_Reference.md
+│   ├── Extras.md
+│   ├── File_structure.md
+│   ├── Implementation_Phases.md
+│   └── Product_Requirements.md
 ├── core/
 │   ├── __init__.py
 │   ├── crypto.py              ← key derivation, AES-256-CBC, HMAC-SHA256
