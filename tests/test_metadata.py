@@ -155,12 +155,92 @@ def test_strip_png_metadata_missing_iend():
         strip_png_metadata(raw)
 
 
-def test_strip_jpeg_metadata_stub():
-    """Test JPEG metadata stripping stub function and validation."""
-    with pytest.raises(NotImplementedError):
-        strip_jpeg_metadata("cover.jpg")
+def test_strip_jpeg_metadata_success(tmp_path: Path):
+    """Verify that EXIF/IPTC/XMP/Adobe APP markers and comments are stripped losslessly."""
+    img = Image.new("RGB", (32, 32), color=(150, 75, 200))
+    jpeg_path = tmp_path / "test_with_meta.jpg"
+    img.save(jpeg_path, format="JPEG", quality=90, comment="Secret Comment String")
+
+    raw = jpeg_path.read_bytes()
+    assert b"\xff\xfe" in raw  # COM marker present
+
+    sanitized = strip_jpeg_metadata(str(jpeg_path))
+    assert sanitized.startswith(b"\xff\xd8")
+    assert sanitized.endswith(b"\xff\xd9")
+    assert b"\xff\xfe" not in sanitized
+
+    # Verify sanitized JPEG can be loaded by PIL
+    reopened = Image.open(BytesIO(sanitized))
+    assert reopened.size == (32, 32)
+    assert reopened.format == "JPEG"
+
+
+def test_strip_jpeg_metadata_inputs_and_types(tmp_path: Path):
+    """Test Path objects, bytes, bytearrays, and invalid types for strip_jpeg_metadata."""
+    img = Image.new("RGB", (16, 16), color=(50, 100, 150))
+    buf = BytesIO()
+    img.save(buf, format="JPEG")
+    raw = buf.getvalue()
+
+    file_path = tmp_path / "sample.jpg"
+    file_path.write_bytes(raw)
+
+    res_str = strip_jpeg_metadata(str(file_path))
+    res_path = strip_jpeg_metadata(file_path)
+    res_bytes = strip_jpeg_metadata(raw)
+    res_ba = strip_jpeg_metadata(bytearray(raw))
+    assert res_str == res_path == res_bytes == res_ba
+
+    # Type error
     with pytest.raises(TypeError):
-        strip_jpeg_metadata(123)  # type: ignore
+        strip_jpeg_metadata(12345)  # type: ignore
+    with pytest.raises(TypeError):
+        strip_jpeg_metadata(None)  # type: ignore
+
+    # File not found
+    with pytest.raises(FileNotFoundError):
+        strip_jpeg_metadata("missing_image_file.jpg")
+
+
+def test_strip_jpeg_metadata_errors():
+    """Test corrupted or malformed JPEG streams and rare marker sequences."""
+    # Valid stream with consecutive 0xFF fill bytes, RST marker, embedded SOI, and standalone EOI
+    raw_with_rst = (
+        b"\xff\xd8"
+        b"\xff\xff\xd8"  # consecutive 0xFF and embedded SOI
+        b"\xff\xd0"  # RST0 marker
+        b"\x00"  # non-FF padding byte
+        b"\xff\xd9"  # EOI
+    )
+    sanitized_rst = strip_jpeg_metadata(raw_with_rst)
+    assert sanitized_rst.startswith(b"\xff\xd8")
+    assert sanitized_rst.endswith(b"\xff\xd9")
+
+    # Stream ending right after 0xFF
+    with pytest.raises(ValueError, match="Missing EOI marker"):
+        strip_jpeg_metadata(b"\xff\xd8\xff\xff")
+
+    # Invalid signature
+    with pytest.raises(ValueError, match="Invalid JPEG file signature"):
+        strip_jpeg_metadata(b"\x00\x00\x00\x00")
+    with pytest.raises(ValueError, match="Invalid JPEG file signature"):
+        strip_jpeg_metadata(b"\xff\xd9" + b"\x00" * 10)
+
+    # Missing EOI
+    with pytest.raises(ValueError, match="Missing EOI marker"):
+        strip_jpeg_metadata(b"\xff\xd8\xff\xe0\x00\x04\x00\x00")
+
+    # Truncated marker length
+    with pytest.raises(ValueError, match="Truncated marker length"):
+        strip_jpeg_metadata(b"\xff\xd8\xff\xe0\x00")
+
+    # Truncated marker payload
+    with pytest.raises(ValueError, match="Truncated marker payload"):
+        strip_jpeg_metadata(b"\xff\xd8\xff\xe0\x00\x10\x01\x02")
+
+    # Truncated SOS
+    with pytest.raises(ValueError, match="Truncated SOS marker"):
+        strip_jpeg_metadata(b"\xff\xd8\xff\xda\x00")
 
 
 def test_strip_mp3_metadata_stub():
@@ -169,3 +249,4 @@ def test_strip_mp3_metadata_stub():
         strip_mp3_metadata("cover.mp3")
     with pytest.raises(TypeError):
         strip_mp3_metadata(123)  # type: ignore
+

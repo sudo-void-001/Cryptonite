@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python: 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB.svg?logo=python&logoColor=white)](pyproject.toml)
-[![Tests: 101/101 Passing](https://img.shields.io/badge/Tests-101%2F101%20Passing-brightgreen.svg)](tests/)
+[![Tests: 117/117 Passing](https://img.shields.io/badge/Tests-117%2F117%20Passing-brightgreen.svg)](tests/)
 [![Coverage: 100% Core](https://img.shields.io/badge/Coverage-100%25%20Core-brightgreen.svg)](tests/)
 [![Code Style: Ruff](https://img.shields.io/badge/Code%20Style-Ruff-000000.svg?logo=ruff&logoColor=white)](pyproject.toml)
 [![Security: Encrypt-then-MAC](https://img.shields.io/badge/Security-AES--256--CBC%20%2B%20HMAC-red.svg)](docs/Architecture.md)
@@ -124,8 +124,8 @@ curl -X POST "http://localhost:8000/extract" \
 | **0** | Project Architecture, Dependencies, Docker, CI/CD | ✅ Complete | 100% |
 | **1** | Crypto Engine, ChaCha20 PRNG, Payload Framing, Compression | ✅ Complete | **100%** |
 | **2** | Adaptive LSB PNG Carrier & Lossless Metadata Sanitizer | ✅ Complete | **100%** |
-| **3** | Direct DCT Coefficient JPEG Carrier (`jpegio`) | 🔄 Next Up | Pending |
-| **4** | Acoustic Echo Hiding MP3 Carrier (`pydub`) | ⏳ Planned | Pending |
+| **3** | Direct DCT Coefficient JPEG Carrier (`jpegio`) | ✅ Complete | **100%** |
+| **4** | Acoustic Echo Hiding MP3 Carrier (`pydub`) | 🔄 Next Up | Pending |
 | **5** | Perceptual & Statistical Steganalysis Suite (SSIM, PSNR, Chi², RS) | ⏳ Planned | Pending |
 | **6** | Rich Interactive CLI Interface & Batch Processing | ⏳ Planned | Pending |
 | **7** | Streamlit Dark-Themed Web Application & Bit-Plane Diff Viewer | ⏳ Planned | Pending |

@@ -48,14 +48,14 @@ Acceptance criteria:
 Files: core/carriers/jpeg.py
 Tests: tests/test_jpeg.py
 Acceptance criteria:
-- [ ] embed(extract(cover, payload)) == payload roundtrip
-- [ ] DCT coefficient changes <= 1 per 100 total coefficients
-- [ ] No DC coefficients modified (only AC)
-- [ ] No re-encoding artifacts (file saved via jpegio, not PIL)
-- [ ] Sign-preserving LSB modification verified
-- [ ] capacity() returns correct byte count
-- [ ] EXIF metadata stripped from output
-- [ ] Raises error if payload exceeds capacity
+- [x] embed(extract(cover, payload)) == payload roundtrip
+- [x] DCT coefficient changes <= 1 per 100 total coefficients
+- [x] No DC coefficients modified (only AC)
+- [x] No re-encoding artifacts (file saved via jpegio, not PIL)
+- [x] Sign-preserving LSB modification verified
+- [x] capacity() returns correct byte count
+- [x] EXIF metadata stripped from output
+- [x] Raises error if payload exceeds capacity
 
 ### Phase 4 — MP3 Carrier
 Files: core/carriers/mp3.py

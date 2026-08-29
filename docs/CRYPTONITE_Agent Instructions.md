@@ -77,25 +77,25 @@ Phase 2: PNG Carrier — Implement `core/carriers/base.py`, `core/carriers/png.p
   - `core/compression.py`: Pre-encryption zlib compression with automated passthrough fallback (100% coverage).
   - Comprehensive test suite: 67 passing unit tests, 0 failures, 0 Ruff lint errors.
 
-## Current Status: Phase 3 Ready
+## Current Status: Phase 4 Ready
 
 The user has explicitly mandated the **"Ponytail philosophy"** (zero bloat, rock-solid robustness, fail-safe defaults, high speed, 100% test coverage, strict typing, defensive validation). 
 
 **What is completed:**
 1. **Phase 0 & Infrastructure**: 100% complete (`pyproject.toml`, Docker, CI, requirements, `.env`, `docs/` organized).
-2. **Phase 1 (Crypto Engine)**: 100% complete and compliant (`crypto.py`, `prng.py`, `payload.py`, `compression.py` with 100% coverage).
-3. **Phase 2 (PNG Carrier & Lossless Metadata Sanitization)**: 100% complete and compliant:
-   - `core/metadata.py`: Lossless binary-level PNG chunk sanitizer stripping all ancillary chunks while strictly preserving `IHDR`, `PLTE`, `IDAT`, `IEND`, and `tRNS` with CRC32 verification (100% coverage).
-   - `core/carriers/base.py`: Robust abstract base class `BaseCarrier`.
-   - `core/carriers/png.py`: Adaptive LSB PNG carrier using MSB-invariant Sobel edge gradient analysis and ChaCha20 scattering (100% coverage, PSNR > 40 dB, SSIM > 0.99, RGBA alpha preservation).
-   - Complete test suite: **101 passing unit and end-to-end integration tests**, 0 failures, 0 Ruff lint errors.
+2. **Phase 1 (Crypto Engine)**: 100% complete (`crypto.py`, `prng.py`, `payload.py`, `compression.py` with 100% coverage).
+3. **Phase 2 (PNG Carrier & Lossless Metadata Sanitization)**: 100% complete (`metadata.py`, `carriers/base.py`, `carriers/png.py` with 100% coverage).
+4. **Phase 3 (JPEG Carrier & Lossless JPEG Metadata Sanitization)**: 100% complete:
+   - `core/metadata.py`: Lossless binary stream marker parser stripping EXIF/IPTC/XMP/Adobe APP markers and comments while preserving JFIF headers and image scan streams (100% coverage).
+   - `core/carriers/jpeg.py`: Direct DCT coefficient steganography using sign-preserving AC coefficient LSB modification, DC/low-magnitude skipping, and ChaCha20 scattering with native `jpegio` and pure-Python fallback (100% coverage).
+   - Complete test suite: **117 passing unit and end-to-end integration tests**, 0 failures, 0 Ruff lint errors.
 
 ## Next Steps for the Next Agent
 
-Your immediate task is to begin implementing **Phase 3 (JPEG Carrier - Direct DCT Coefficient Embedding)**.
-Read `docs/Algorithm_Specifications.md` and `docs/Implementation_Phases.md` for Phase 3 requirements (`jpegio` raw DCT manipulation without re-encoding, sign-preserving AC coefficient LSB modification, DC/abs<=1 skipping).
+Your immediate task is to begin implementing **Phase 4 (MP3 Carrier - Acoustic Echo Hiding)**.
+Read `docs/Algorithm_Specifications.md` and `docs/Implementation_Phases.md` for Phase 4 requirements (`pydub` / `scipy` cepstral echo hiding with $d_0=0.5\text{ ms}$ and $d_1=1.0\text{ ms}$ delays, 0.05 amplitude, autocorrelation peak extraction, ID3 tag stripping in `core/metadata.py`).
 
-**Guidelines for Phase 3:**
+**Guidelines for Phase 4:**
 1. Maintain the Ponytail philosophy: strict typing, defensive validation, 100% test coverage.
-2. Note that on Windows, `jpegio` may require C++ build tools or fallback mock/conditional handling in CI.
-3. Do not modify Phase 1 or Phase 2 modules (`core/crypto.py`, `core/prng.py`, `core/payload.py`, `core/compression.py`, `core/metadata.py`, `core/carriers/png.py`) — they are completed and fully tested.
+2. Note that `ffmpeg` is used by `pydub`; ensure pure-Python array fallbacks or mock fixtures exist for CI/Windows.
+3. Do not modify Phase 1, Phase 2, or Phase 3 modules — they are completed and fully tested.
