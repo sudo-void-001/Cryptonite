@@ -15,7 +15,10 @@ from core.carriers.jpeg import (
     _block_dct_2d,
     _block_idct_2d,
     _get_eligible_ac_mask,
+    _img_to_vectorized_blocks,
     _modify_coeff_sign_preserving,
+    _modify_coeffs_vectorized,
+    _vectorized_blocks_to_img,
 )
 
 
@@ -78,7 +81,19 @@ def test_dct_block_math_helpers():
     assert not mask[3, 3]
     assert not mask[4, 4]
 
-    # Test sign-preserving LSB flipping
+    # Test 3D batch mask
+    arr_3d = np.zeros((4, 8, 8), dtype=np.int32)
+    arr_3d[:, 0, 0] = 50  # DC
+    arr_3d[:, 0, 1] = 5  # AC
+    mask_3d = _get_eligible_ac_mask(arr_3d)
+    assert not np.any(mask_3d[:, 0, 0])
+    assert np.all(mask_3d[:, 0, 1])
+
+    # Test invalid dimensions on mask
+    with pytest.raises(ValueError, match="Expected 2D or 3D array"):
+        _get_eligible_ac_mask(np.zeros(10))
+
+    # Test scalar sign-preserving LSB flipping
     # Positive values:
     assert _modify_coeff_sign_preserving(2, 0) == 2
     assert _modify_coeff_sign_preserving(2, 1) == 3
@@ -89,6 +104,21 @@ def test_dct_block_math_helpers():
     assert _modify_coeff_sign_preserving(-2, 1) == -3
     assert _modify_coeff_sign_preserving(-3, 0) == -2
     assert _modify_coeff_sign_preserving(-3, 1) == -3
+
+    # Test vectorized sign-preserving LSB modification
+    vals = np.array([2, 3, 5, 8, -2, -3, -5, -8], dtype=np.int32)
+    bits = np.array([0, 1, 0, 1, 0, 1, 0, 1], dtype=np.uint8)
+    mod_vals = _modify_coeffs_vectorized(vals, bits)
+    assert np.array_equal(np.abs(mod_vals) & 1, bits)
+    assert np.all(mod_vals[:4] > 0)
+    assert np.all(mod_vals[4:] < 0)
+
+    # Test vectorized block partition and reconstruction
+    test_img = np.random.randint(0, 255, (32, 32, 3), dtype=np.uint8).astype(np.float32)
+    blocks, hb, wb = _img_to_vectorized_blocks(test_img)
+    assert blocks.shape == (3 * 4 * 4, 8, 8)
+    rec_img = _vectorized_blocks_to_img(blocks, hb, wb)
+    assert np.allclose(test_img, rec_img)
 
 
 @pytest.mark.parametrize("payload_size", [0, 1, 8, 16, 32, 64])
