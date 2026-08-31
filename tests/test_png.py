@@ -72,7 +72,7 @@ def test_png_embed_extract_roundtrip_rgb(
     _create_test_image(cover_path, size=(64, 64), mode="RGB")
 
     prng_seed = b"\x01" * 32
-    payload = np.random.bytes(payload_size)
+    payload = np.random.default_rng(payload_size).bytes(payload_size)
 
     stego_bytes = png_carrier.embed(str(cover_path), payload, prng_seed)
     stego_path.write_bytes(stego_bytes)
@@ -237,10 +237,10 @@ def test_png_error_handling(tmp_path: Path, png_carrier: PngCarrier):
     with pytest.raises(TypeError):
         png_carrier.extract(str(valid_img), "not_bytes")  # type: ignore
 
-    # Short seed
-    with pytest.raises(ValueError, match="at least 16 bytes"):
+    # Invalid seed length
+    with pytest.raises(ValueError, match="exactly 32 bytes"):
         png_carrier.embed(str(valid_img), b"data", b"short_seed")
-    with pytest.raises(ValueError, match="at least 16 bytes"):
+    with pytest.raises(ValueError, match="exactly 32 bytes"):
         png_carrier.extract(str(valid_img), b"short_seed")
 
 

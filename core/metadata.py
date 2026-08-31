@@ -272,8 +272,7 @@ def strip_mp3_metadata(audio_input: str | Path | bytes | bytearray) -> bytes:
         total_tag_len = 10 + tag_size + (10 if has_footer else 0)
 
         if offset + total_tag_len > raw_len:
-            # Truncated ID3v2 tag — strip whatever we can and stop
-            offset = raw_len
+            # Truncated ID3v2 tag — stop stripping
             break
 
         offset += total_tag_len
@@ -289,9 +288,11 @@ def strip_mp3_metadata(audio_input: str | Path | bytes | bytearray) -> bytes:
 
         # --- Strip trailing APE tag (32-byte footer starting with "APETAGEX") ---
         if len(audio_data) >= 32 and audio_data[-32:-24] == b"APETAGEX":
-            # APE footer: preamble(8)+version(4)+size(4)+count(4)+flags(4)+reserved(8)
-            ape_size = struct.unpack_from("<I", audio_data, len(audio_data) - 32 + 12)[0]
-            total_ape = ape_size + 32
+            # APE footer layout: preamble(8)+version(4)+size(4)+count(4)+flags(4)+reserved(8)
+            # In APEv2, the size field stores the entire tag size (items + header + footer)
+            footer_offset = len(audio_data) - 32
+            ape_size = struct.unpack_from("<I", audio_data, footer_offset + 12)[0]
+            total_ape = max(32, ape_size)
             if total_ape <= len(audio_data):
                 audio_data = audio_data[: len(audio_data) - total_ape]
 

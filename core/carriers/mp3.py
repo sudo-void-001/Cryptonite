@@ -39,7 +39,7 @@ def _compute_lpc(segment: np.ndarray, order: int = LPC_ORDER) -> np.ndarray:
     r_lpc = r[center : center + order + 1]
     if r_lpc[0] < 1e-12:
         return np.zeros(order, dtype=np.float64)
-    return solve_toeplitz((r_lpc[:-1], r_lpc[:-1]), -r_lpc[1:])
+    return solve_toeplitz(r_lpc[:-1], -r_lpc[1:])
 
 
 def _extract_bit_from_segment(
@@ -109,7 +109,7 @@ def _audio_to_mono_f32(audio: AudioSegment) -> np.ndarray:
 def _f32_to_audio(samples: np.ndarray, sample_rate: int, sample_width: int) -> AudioSegment:
     """Convert float32 mono array [-1, 1] back to pydub AudioSegment at original sample_width."""
     max_val = float(1 << (sample_width * 8 - 1))
-    int_samples = np.clip(samples * max_val, -(max_val + 1), max_val - 1).astype(
+    int_samples = np.clip(samples * max_val, -max_val, max_val - 1).astype(
         {1: np.int8, 2: np.int16, 4: np.int32}[sample_width]
     )
     return AudioSegment(
@@ -187,8 +187,8 @@ class Mp3Carrier(BaseCarrier):
         payload_bytes = bytes(payload)
         seed_bytes = bytes(prng_seed)
 
-        if len(seed_bytes) < 16:
-            raise ValueError(f"prng_seed must be at least 16 bytes, got {len(seed_bytes)}")
+        if len(seed_bytes) != 32:
+            raise ValueError(f"prng_seed must be exactly 32 bytes, got {len(seed_bytes)}")
 
         path = Path(carrier_path)
         if not path.is_file():
@@ -248,8 +248,8 @@ class Mp3Carrier(BaseCarrier):
             )
 
         seed_bytes = bytes(prng_seed)
-        if len(seed_bytes) < 16:
-            raise ValueError(f"prng_seed must be at least 16 bytes, got {len(seed_bytes)}")
+        if len(seed_bytes) != 32:
+            raise ValueError(f"prng_seed must be exactly 32 bytes, got {len(seed_bytes)}")
 
         path = Path(stego_path)
         if not path.is_file():

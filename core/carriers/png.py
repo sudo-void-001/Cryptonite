@@ -224,8 +224,8 @@ class PngCarrier(BaseCarrier):
         payload_bytes = bytes(payload)
         seed_bytes = bytes(prng_seed)
 
-        if len(seed_bytes) < 16:
-            raise ValueError(f"prng_seed must be at least 16 bytes, got {len(seed_bytes)}")
+        if len(seed_bytes) != 32:
+            raise ValueError(f"prng_seed must be exactly 32 bytes, got {len(seed_bytes)}")
 
         img, arr, embed_channels = _load_image_array(carrier_path)
         grad = _compute_msb_gradient(arr, embed_channels)
@@ -300,8 +300,8 @@ class PngCarrier(BaseCarrier):
             raise TypeError(f"prng_seed must be bytes or bytearray, got {type(prng_seed).__name__}")
 
         seed_bytes = bytes(prng_seed)
-        if len(seed_bytes) < 16:
-            raise ValueError(f"prng_seed must be at least 16 bytes, got {len(seed_bytes)}")
+        if len(seed_bytes) != 32:
+            raise ValueError(f"prng_seed must be exactly 32 bytes, got {len(seed_bytes)}")
 
         _, arr, embed_channels = _load_image_array(stego_path)
         grad = _compute_msb_gradient(arr, embed_channels)

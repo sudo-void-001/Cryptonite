@@ -73,14 +73,18 @@ def _make_id3v1_tag() -> bytes:
     return b"TAG" + b"A" * 30 + b"B" * 30 + b"C" * 30 + b"\x00" * 35
 
 
-def _make_ape_footer(ape_payload_size: int = 0) -> bytes:
-    """Synthesize an APE footer (32 bytes) with the given payload size."""
+def _make_ape_footer(ape_payload_size: int = 0, has_header: bool = False) -> bytes:
+    """Synthesize an APE footer (32 bytes) with optional header."""
     ape_version = struct.pack("<I", 2000)
-    ape_size = struct.pack("<I", ape_payload_size)
+    total_tag_size = ape_payload_size + 32 + (32 if has_header else 0)
+    ape_size = struct.pack("<I", total_tag_size)
     item_count = struct.pack("<I", 0)
-    flags = struct.pack("<I", 0)
+    flags_val = (1 << 31) if has_header else 0
+    flags = struct.pack("<I", flags_val)
     reserved = b"\x00" * 8
-    return b"APETAGEX" + ape_version + ape_size + item_count + flags + reserved
+    footer = b"APETAGEX" + ape_version + ape_size + item_count + flags + reserved
+    header = footer if has_header else b""
+    return header + (b"\x00" * ape_payload_size) + footer
 
 
 # ---------------------------------------------------------------------------
@@ -269,10 +273,10 @@ def test_mp3_error_handling(tmp_path: Path):
     with pytest.raises(TypeError):
         carrier.extract(str(valid_path), "not_bytes")  # type: ignore
 
-    # ValueError — seed too short
-    with pytest.raises(ValueError, match="at least 16 bytes"):
+    # ValueError — seed not 32 bytes
+    with pytest.raises(ValueError, match="exactly 32 bytes"):
         carrier.embed(str(valid_path), b"data", b"short")
-    with pytest.raises(ValueError, match="at least 16 bytes"):
+    with pytest.raises(ValueError, match="exactly 32 bytes"):
         carrier.extract(str(valid_path), b"short")
 
 
@@ -332,6 +336,28 @@ def test_strip_mp3_metadata_ape_footer():
     sanitized = strip_mp3_metadata(raw)
     assert sanitized == audio_frames
     assert b"APETAGEX" not in sanitized
+
+
+def test_strip_mp3_metadata_ape_with_header():
+    """APE tag with header and payload must be completely stripped."""
+    audio_frames = b"\xff\xfb\x90\x00" + b"\xCC" * 200
+    ape = _make_ape_footer(ape_payload_size=64, has_header=True)
+    raw = audio_frames + ape
+
+    sanitized = strip_mp3_metadata(raw)
+    assert sanitized == audio_frames
+    assert b"APETAGEX" not in sanitized
+
+
+def test_strip_mp3_metadata_truncated_id3v2():
+    """Truncated ID3v2 tag (declared size > actual length) handled gracefully."""
+    # Tag declares 100 bytes but only 10 bytes follow
+    truncated_tag = b"ID3\x03\x00\x00\x00\x00\x00\x64" + b"\x00" * 10
+    audio_frames = b"\xff\xfb\x90\x00" + b"\xAA" * 100
+    raw = truncated_tag + audio_frames
+    sanitized = strip_mp3_metadata(raw)
+    # Header stripped, remaining bytes returned
+    assert len(sanitized) > 0
 
 
 def test_strip_mp3_metadata_all_tags_combined():
