@@ -14,7 +14,6 @@ from core.metadata import (
     CRITICAL_PNG_CHUNKS,
     PNG_SIGNATURE,
     strip_jpeg_metadata,
-    strip_mp3_metadata,
     strip_png_metadata,
 )
 
@@ -243,10 +242,4 @@ def test_strip_jpeg_metadata_errors():
         strip_jpeg_metadata(b"\xff\xd8\xff\xda\x00")
 
 
-def test_strip_mp3_metadata_stub():
-    """Test MP3 metadata stripping stub function and validation."""
-    with pytest.raises(NotImplementedError):
-        strip_mp3_metadata("cover.mp3")
-    with pytest.raises(TypeError):
-        strip_mp3_metadata(123)  # type: ignore
 

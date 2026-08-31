@@ -208,10 +208,98 @@ def strip_jpeg_metadata(image_input: str | Path | bytes | bytearray) -> bytes:
     return bytes(output)
 
 
-def strip_mp3_metadata(audio_path: str) -> bytes:
+def strip_mp3_metadata(audio_input: str | Path | bytes | bytearray) -> bytes:
     """
-    Remove ID3v1, ID3v2, and APE tags from MP3 while preserving audio frame streams.
+    Losslessly remove ID3v2 header tags, ID3v1 trailer tags, and APE footer tags
+    from an MP3 or WAV audio byte stream. Preserves all raw MPEG audio frames intact.
+
+    Supports WAV RIFF streams transparently (pass-through; WAV has no ID3 tags).
+
+    Args:
+        audio_input: File path (str or Path) or raw audio bytes/bytearray.
+
+    Returns:
+        Sanitized audio bytes with all metadata tags removed.
+
+    Raises:
+        TypeError: If audio_input is not a valid str, Path, bytes, or bytearray.
+        FileNotFoundError: If a file path is passed but does not exist.
+        ValueError: If the data is empty, or has a corrupted ID3v2 synchsafe header.
     """
-    if not isinstance(audio_path, str):
-        raise TypeError(f"audio_path must be str, got {type(audio_path).__name__}")
-    raise NotImplementedError("Phase 4 implementation pending")
+    if isinstance(audio_input, (str, Path)):
+        path = Path(audio_input)
+        if not path.is_file():
+            raise FileNotFoundError(f"Audio file not found: {audio_input}")
+        raw = path.read_bytes()
+    elif isinstance(audio_input, (bytes, bytearray)):
+        raw = bytes(audio_input)
+    else:
+        raise TypeError(
+            f"audio_input must be str, Path, bytes, or bytearray, "
+            f"got {type(audio_input).__name__}"
+        )
+
+    if len(raw) == 0:
+        raise ValueError("Audio data is empty")
+
+    raw_view = memoryview(raw)
+    offset = 0
+    raw_len = len(raw)
+
+    # WAV / RIFF pass-through: WAV files have no ID3 tags; return as-is
+    if raw_len >= 4 and raw[:4] == b"RIFF":
+        return bytes(raw)
+
+    # --- Strip leading ID3v2 tag(s) ---
+    # ID3v2 structure: b"ID3" [major] [minor] [flags] [s0 s1 s2 s3] <payload>
+    # Size is a 28-bit synchsafe big-endian integer (each byte uses only 7 bits).
+    while offset + 10 <= raw_len and raw_view[offset : offset + 3] == b"ID3":
+        flags = raw_view[offset + 5]
+        s0 = raw_view[offset + 6]
+        s1 = raw_view[offset + 7]
+        s2 = raw_view[offset + 8]
+        s3 = raw_view[offset + 9]
+
+        # Validate synchsafe integers (each byte must be < 128)
+        if any(b > 127 for b in (s0, s1, s2, s3)):
+            raise ValueError(
+                "Corrupted ID3v2 tag: invalid synchsafe integer (byte >= 128)"
+            )
+
+        tag_size = (s0 << 21) | (s1 << 14) | (s2 << 7) | s3
+        # 0x10 flag = footer present (10-byte echo of header at end of tag)
+        has_footer = bool(flags & 0x10)
+        total_tag_len = 10 + tag_size + (10 if has_footer else 0)
+
+        if offset + total_tag_len > raw_len:
+            # Truncated ID3v2 tag — strip whatever we can and stop
+            offset = raw_len
+            break
+
+        offset += total_tag_len
+
+    # Audio frames begin here
+    audio_data = bytearray(raw_view[offset:raw_len])
+
+    # Strip trailing tags iteratively — APE first (it wraps ID3v1), then ID3v1.
+    # Loop handles any combination of APE + ID3v1 trailing tags.
+    prev_len = -1
+    while len(audio_data) != prev_len:
+        prev_len = len(audio_data)
+
+        # --- Strip trailing APE tag (32-byte footer starting with "APETAGEX") ---
+        if len(audio_data) >= 32 and audio_data[-32:-24] == b"APETAGEX":
+            # APE footer: preamble(8)+version(4)+size(4)+count(4)+flags(4)+reserved(8)
+            ape_size = struct.unpack_from("<I", audio_data, len(audio_data) - 32 + 12)[0]
+            total_ape = ape_size + 32
+            if total_ape <= len(audio_data):
+                audio_data = audio_data[: len(audio_data) - total_ape]
+
+        # --- Strip trailing ID3v1 tag (fixed 128 bytes starting with "TAG") ---
+        if len(audio_data) >= 128 and audio_data[-128:-125] == b"TAG":
+            audio_data = audio_data[:-128]
+
+    if len(audio_data) == 0:
+        raise ValueError("No audio data remains after stripping all metadata tags")
+
+    return bytes(audio_data)

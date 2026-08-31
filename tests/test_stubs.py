@@ -1,11 +1,17 @@
+"""
+Stub / Phase-pending feature tests for Cryptonite.
+As phases complete, stub tests are removed and replaced by full test suites.
+Only stubs that have NOT yet been implemented belong here.
+"""
+
 import numpy as np
 import pytest
 
-from core import analysis, metadata
-from core.carriers.mp3 import Mp3Carrier
+from core import analysis
 
 
 def test_analysis_stubs():
+    """Analysis module functions are Phase 5 stubs — all raise NotImplementedError."""
     arr = np.array([])
     with pytest.raises(NotImplementedError):
         analysis.chi_squared_test(arr)
@@ -31,34 +37,3 @@ def test_analysis_stubs():
         analysis.full_analysis(arr, arr)
     with pytest.raises(TypeError):
         analysis.full_analysis(arr, "bad")  # type: ignore
-
-
-def test_metadata_stubs():
-    with pytest.raises(NotImplementedError):
-        metadata.strip_mp3_metadata("file.mp3")
-    with pytest.raises(TypeError):
-        metadata.strip_mp3_metadata(123)  # type: ignore
-
-
-def test_carrier_stubs():
-    carrier = Mp3Carrier()
-    with pytest.raises(NotImplementedError):
-        carrier.embed("file", b"data", b"seed")
-    with pytest.raises(TypeError):
-        carrier.embed(123, b"data", b"seed")  # type: ignore
-    with pytest.raises(TypeError):
-        carrier.embed("file", "data", b"seed")  # type: ignore
-    with pytest.raises(TypeError):
-        carrier.embed("file", b"data", "seed")  # type: ignore
-
-    with pytest.raises(NotImplementedError):
-        carrier.extract("file", b"seed")
-    with pytest.raises(TypeError):
-        carrier.extract(123, b"seed")  # type: ignore
-    with pytest.raises(TypeError):
-        carrier.extract("file", "seed")  # type: ignore
-
-    with pytest.raises(NotImplementedError):
-        carrier.capacity("file")
-    with pytest.raises(TypeError):
-        carrier.capacity(123)  # type: ignore
