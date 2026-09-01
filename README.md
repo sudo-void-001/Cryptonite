@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python: 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB.svg?logo=python&logoColor=white)](pyproject.toml)
-[![Tests: 152/152 Passing](https://img.shields.io/badge/Tests-152%2F152%20Passing-brightgreen.svg)](tests/)
+[![Tests: 200/200 Passing](https://img.shields.io/badge/Tests-200%2F200%20Passing-brightgreen.svg)](tests/)
 [![Coverage: 100% Core](https://img.shields.io/badge/Coverage-100%25%20Core-brightgreen.svg)](tests/)
 [![Code Style: Ruff](https://img.shields.io/badge/Code%20Style-Ruff-000000.svg?logo=ruff&logoColor=white)](pyproject.toml)
 [![Security: Encrypt-then-MAC](https://img.shields.io/badge/Security-AES--256--CBC%20%2B%20HMAC-red.svg)](docs/Architecture.md)
