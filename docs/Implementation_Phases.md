@@ -89,16 +89,16 @@ Acceptance criteria:
 Files: cli/main.py
 Tests: manual testing + snapshot tests
 Acceptance criteria:
-- [ ] `cryptonite embed` works with --carrier, --payload, --passphrase, --output flags
-- [ ] `cryptonite extract` works with --stego, --passphrase, --output flags
-- [ ] `cryptonite capacity` shows carrier capacity in human-readable format
-- [ ] `cryptonite analyze` runs steganalysis and shows chi-squared, SSIM, RS, verdict
-- [ ] `cryptonite batch embed` processes directory of files
-- [ ] `cryptonite batch extract` processes directory of stego files
-- [ ] Rich panels: green for success, red for failure, yellow for warnings
-- [ ] Progress bars for batch operations
-- [ ] `--help` shows clear usage for all commands
-- [ ] Passphrase can be provided via --passphrase flag or interactive prompt (hidden input)
+- [x] `cryptonite embed` works with --carrier, --payload, --passphrase, --output flags
+- [x] `cryptonite extract` works with --stego, --passphrase, --output flags
+- [x] `cryptonite capacity` shows carrier capacity in human-readable format
+- [x] `cryptonite analyze` runs steganalysis and shows chi-squared, SSIM, RS, verdict
+- [x] `cryptonite batch embed` processes directory of files
+- [x] `cryptonite batch extract` processes directory of stego files
+- [x] Rich panels: green for success, red for failure, yellow for warnings
+- [x] Progress bars for batch operations
+- [x] `--help` shows clear usage for all commands
+- [x] Passphrase can be provided via --passphrase flag or interactive prompt (hidden input)
 
 ### Phase 7 — Web UI (Streamlit)
 Files: ui/app.py, ui/components.py
