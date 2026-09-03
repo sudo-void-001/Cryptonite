@@ -103,16 +103,16 @@ Acceptance criteria:
 ### Phase 7 — Web UI (Streamlit)
 Files: ui/app.py, ui/components.py
 Acceptance criteria:
-- [ ] Dark theme applied (background #0d0d0d, gold #c9a84c accents)
-- [ ] Left panel: file upload, passphrase input, action buttons
-- [ ] Right panel: output preview, PSNR, SSIM, chi-squared score, detection verdict, download button
-- [ ] Embed mode: upload carrier + payload, enter passphrase, download stego file
-- [ ] Extract mode: upload stego file, enter passphrase, download payload
-- [ ] Analyze mode: upload file, show steganalysis results with color-coded verdict badge
-- [ ] Capacity mode: upload file, show capacity breakdown
-- [ ] Steganographic diff viewer: side-by-side cover vs stego with bit-plane overlay toggle
-- [ ] Error states: clear error messages for wrong passphrase, capacity exceeded, unsupported format
-- [ ] Loading spinner during embed/extract operations
+- [x] Dark theme applied (background #0d0d0d, gold #c9a84c accents)
+- [x] Left panel: file upload, passphrase input, action buttons
+- [x] Right panel: output preview, PSNR, SSIM, chi-squared score, detection verdict, download button
+- [x] Embed mode: upload carrier + payload, enter passphrase, download stego file
+- [x] Extract mode: upload stego file, enter passphrase, download payload
+- [x] Analyze mode: upload file, show steganalysis results with color-coded verdict badge
+- [x] Capacity mode: upload file, show capacity breakdown
+- [x] Steganographic diff viewer: side-by-side cover vs stego with bit-plane overlay toggle
+- [x] Error states: clear error messages for wrong passphrase, capacity exceeded, unsupported format
+- [x] Loading spinner during embed/extract operations
 
 ### Phase 8 — REST API (FastAPI)
 Files: api/routes.py, api/schemas.py
