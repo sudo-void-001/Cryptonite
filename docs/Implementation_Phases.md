@@ -118,16 +118,16 @@ Acceptance criteria:
 Files: api/routes.py, api/schemas.py
 Tests: tests/test_api.py
 Acceptance criteria:
-- [ ] POST /embed accepts multipart form (carrier file, payload file, passphrase) returns stego file
-- [ ] POST /extract accepts multipart form (stego file, passphrase) returns payload file
-- [ ] GET /capacity accepts file upload, returns JSON with capacity bytes and human-readable
-- [ ] POST /analyze accepts file upload, returns JSON with chi-squared, SSIM, RS, verdict
-- [ ] POST /batch/embed accepts zip of carriers + payload + passphrase, returns zip of stego files
-- [ ] All endpoints return proper HTTP status codes (200, 400, 413, 422, 500)
-- [ ] Swagger UI available at /docs
-- [ ] Response time < 3 seconds for files under 10MB
-- [ ] File size limit configurable via environment variable
-- [ ] CORS headers configurable
+- [x] POST /embed accepts multipart form (carrier file, payload file, passphrase) returns stego file
+- [x] POST /extract accepts multipart form (stego file, passphrase) returns payload file
+- [x] GET /capacity accepts file upload, returns JSON with capacity bytes and human-readable
+- [x] POST /analyze accepts file upload, returns JSON with chi-squared, SSIM, RS, verdict
+- [x] POST /batch/embed accepts zip of carriers + payload + passphrase, returns zip of stego files
+- [x] All endpoints return proper HTTP status codes (200, 400, 413, 422, 500)
+- [x] Swagger UI available at /docs
+- [x] Response time < 3 seconds for files under 10MB
+- [x] File size limit configurable via environment variable
+- [x] CORS headers configurable
 
 ### Phase 9 — Polish and Benchmarks
 Files: benchmarks/bench_*.py, README.md updates

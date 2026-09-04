@@ -101,6 +101,7 @@ ignore = ["S101"]  # Allow assert in tests
 "tests/*" = ["S101", "S105", "S106", "S311", "E501"]
 "cli/*"   = ["E501"]
 "ui/*"    = ["E501"]
+"api/*"   = ["E501", "B008", "B904"]
 
 [tool.mypy]
 python_version = "3.11"
