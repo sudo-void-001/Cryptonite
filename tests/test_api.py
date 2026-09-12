@@ -185,3 +185,36 @@ class TestErrorCodes:
     def test_validation_error_422(self):
         response = client.post("/embed") # Missing all fields
         assert response.status_code == 422
+        
+    def test_embed_unsupported_carrier(self):
+        response = client.post(
+            "/embed",
+            files={
+                "carrier": ("cover.txt", b"not an image", "text/plain"),
+                "payload": ("secret.txt", b"payload", "text/plain")
+            },
+            data={"passphrase": "test"}
+        )
+        assert response.status_code == 400
+        assert "Unsupported carrier format" in response.json()["detail"]
+        
+    def test_extract_unsupported_carrier(self):
+        response = client.post(
+            "/extract",
+            files={"stego": ("stego.txt", b"not an image", "text/plain")},
+            data={"passphrase": "test"}
+        )
+        assert response.status_code == 400
+        assert "Unsupported carrier format" in response.json()["detail"]
+        
+    def test_analyze_unsupported_carrier(self):
+        img_bytes = create_dummy_image()
+        response = client.post(
+            "/analyze",
+            files={
+                "cover": ("cover.txt", b"not an image", "text/plain"),
+                "stego": ("stego.png", img_bytes, "image/png")
+            }
+        )
+        assert response.status_code == 400
+        assert "Invalid image format" in response.json()["detail"]
