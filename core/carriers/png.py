@@ -268,10 +268,12 @@ class PngCarrier(BaseCarrier):
         if stego_arr.shape[2] == 1:
             stego_arr = stego_arr[:, :, 0]
 
-        # Save stego image losslessly
+        # Save stego image losslessly — do NOT use optimize=True as it triggers
+        # Pillow's two-pass encoder which can alter filter bytes and pixel
+        # representation for palette/grayscale modes, breaking extraction.
         out_img = Image.fromarray(stego_arr, mode=img.mode)
         buf = BytesIO()
-        out_img.save(buf, format="PNG", optimize=True)
+        out_img.save(buf, format="PNG", optimize=False, compress_level=6)
         raw_png = buf.getvalue()
 
         # Sanitize metadata chunks
