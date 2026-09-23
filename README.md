@@ -11,7 +11,7 @@
 
 ---
 
-## ⚡ Overview
+## ⚡ Overview 
 
 **Cryptonite** combines military-grade encryption, cryptographic position scattering, lossless metadata sanitization, and texture-adaptive embedding to conceal secret payloads inside common media carriers without perceptible distortion or statistical anomalies.
 
