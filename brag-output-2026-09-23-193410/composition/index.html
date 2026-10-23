@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cryptonite Trailer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@700&display=swap');
+    
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0d1117;
+      color: #dfe2eb;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      width: 1920px;
+      height: 1080px;
+    }
+
+    .scene {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+    }
+
+    /* Scene 1 */
+    #scene-1 .hook-text {
+      font-family: 'JetBrains Mono', monospace;
+      color: #10b981;
+      font-size: 64px;
+      text-align: center;
+    }
+
+    /* Scene 2 */
+    #scene-2 {
+      background-color: #161b22;
+      align-items: flex-start;
+      padding: 100px;
+    }
+    #scene-2 .terminal {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 48px;
+      color: #dfe2eb;
+    }
+    #scene-2 .highlight {
+      margin-top: 100px;
+      font-size: 72px;
+      font-weight: 700;
+    }
+
+    /* Scene 3 */
+    #scene-3 .radar {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 56px;
+      color: #06b6d4;
+      margin-bottom: 40px;
+    }
+    #scene-3 .verdict {
+      font-size: 96px;
+      font-weight: 700;
+      color: #10b981;
+    }
+    #scene-3 .subtext {
+      margin-top: 40px;
+      font-size: 48px;
+    }
+
+    /* Scene 4 */
+    #scene-4 .title {
+      font-size: 180px;
+      font-weight: 700;
+      letter-spacing: -4px;
+      margin-bottom: 20px;
+    }
+    #scene-4 .subtitle {
+      font-size: 48px;
+      color: #10b981;
+    }
+  </style>
+</head>
+<body>
+  <div data-hf-id="hf-1g1e" data-composition-id="root" data-width="1920" data-height="1080" style="width:1920px; height:1080px; position:relative; overflow:hidden;">
+    <div data-hf-id="hf-lio4" id="scene-1" class="scene">
+      <div data-hf-id="hf-oegy" class="hook-text">What you see is never all there is.</div>
+    </div>
+
+    <div data-hf-id="hf-we5r" id="scene-2" class="scene">
+      <div data-hf-id="hf-81az" class="terminal">cryptonite embed -c cover.png -p secret.pdf<br data-hf-id="hf-x5px"><span data-hf-id="hf-6bxv" style="color:#10b981">AES-256-CBC: 100% | ChaCha20: 100%</span></div>
+      <div data-hf-id="hf-egxn" class="highlight">Military-grade steganography.</div>
+    </div>
+
+    <div data-hf-id="hf-q8fy" id="scene-3" class="scene">
+      <div data-hf-id="hf-nh3p" class="radar">Chi-squared: Pass | SSIM: 0.99</div>
+      <div data-hf-id="hf-80xb" class="verdict">VERDICT: SAFE (&lt; 0.5% DETECTABILITY)</div>
+      <div data-hf-id="hf-rd7y" class="subtext">Zero re-encoding artifacts. Statistically invisible.</div>
+    </div>
+
+    <div data-hf-id="hf-13xl" id="scene-4" class="scene">
+      <div data-hf-id="hf-3dld" class="title">CRYPTONITE</div>
+      <div data-hf-id="hf-jyr4" class="subtitle">Production-grade steganography. Open source.</div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script>
+    const tl = gsap.timeline();
+
+    // Scene 1: The Hook (0 - 4s)
+    tl.to("#scene-1", { opacity: 1, duration: 0.5 })
+      .to("#scene-1", { opacity: 0, duration: 0.5 }, "+=3");
+
+    // Scene 2: The Action (4 - 11s)
+    tl.to("#scene-2", { opacity: 1, duration: 0.5 })
+      .to("#scene-2", { opacity: 0, duration: 0.5 }, "+=6");
+
+    // Scene 3: The Proof (11 - 17s)
+    tl.to("#scene-3", { opacity: 1, duration: 0.5 })
+      .to("#scene-3", { opacity: 0, duration: 0.5 }, "+=5");
+
+    // Scene 4: The Reveal (17 - 22s)
+    tl.to("#scene-4", { opacity: 1, duration: 0.5 })
+      .to("#scene-4", { opacity: 0, duration: 0.5 }, "+=4");
+
+    // Register timeline for Hyperframes runtime
+    window.__timelines = window.__timelines || {};
+    window.__timelines["root"] = tl;
+  </script>
+</body>
+</html>
